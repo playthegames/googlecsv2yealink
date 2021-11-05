@@ -70,17 +70,17 @@ public class ConverstionLayout
 public class Phonebook
 {
     [XmlElement(ElementName = "DirectoryEntry")]
-    public List<PhonebookEntry> Entries {get; set;}
+    public List<PhonebookEntry>? Entries {get; set;}
 }
 
 [XmlRoot(ElementName = "DirectoryEntry")]
 public class PhonebookEntry
 {
     [XmlElement(ElementName = "Name")]
-    public string Name {get; set;}
+    public string? Name {get; set;}
 
     [XmlElement(ElementName = "Telephone")]
-    public string Telephone {get; set;}
+    public string? Telephone {get; set;}
 }
 
 public static class ConversionHelper
