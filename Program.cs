@@ -12,11 +12,21 @@ string filename = args[0];
 if(!File.Exists(filename))
     throw new ConversionException("Filename specified does not exist.");
 
-//ConversionHelper.Log("Starting Conversion");
+StreamReader? reader = null;
+CsvReader? csv = null;
+List<ConverstionLayout>? records = null;
 
-StreamReader reader = new StreamReader(filename);
-CsvReader csv = new CsvReader(reader, CultureInfo.InvariantCulture);
-var records = csv.GetRecords<ConverstionLayout>().ToList();
+try
+{
+    reader = new StreamReader(filename);
+    csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+    records = csv.GetRecords<ConverstionLayout>().ToList();
+}
+catch(Exception ex)
+{
+    throw new ConversionException(ex.Message.ToString());
+}
+
 
 Phonebook phonebook = new Phonebook();
 phonebook.Entries = new List<PhonebookEntry>();
@@ -110,11 +120,19 @@ public static class ConversionHelper
     public static string CreateXML(Phonebook phonebook)
     {
         string output = String.Empty;
-        XmlSerializer xml = new XmlSerializer(phonebook.GetType());
-        using(StringWriter writer = new StringWriter())
+        XmlSerializer? xml = null;
+        try
         {
-            xml.Serialize(writer, phonebook);
-            output = writer.ToString();
+            xml = new XmlSerializer(phonebook.GetType());
+            using(StringWriter writer = new StringWriter())
+            {
+                xml.Serialize(writer, phonebook);
+                output = writer.ToString();
+            }
+        }
+        catch(Exception ex)
+        {
+            throw new ConversionException(ex.Message.ToString());
         }
 
         return output;
